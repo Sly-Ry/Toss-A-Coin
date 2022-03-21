@@ -21,8 +21,20 @@
   "dependencies": {
     "compression": "^1.7.4",
     "express": "^4.17.1",
+    "file-loader": "^6.2.0",
+    "image-webpack-loader": "^8.1.0",
+    "jquery": "^3.6.0",
     "mongoose": "^5.5.15",
     "morgan": "^1.9.1",
+    "popper": "^1.0.1",
+    "popper.js": "1.16.0",
+    "save": "^2.4.0",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4"
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-pwa-manifest": "^4.3.0"
   }
 }
