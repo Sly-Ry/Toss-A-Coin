@@ -7,7 +7,7 @@ const request = indexedDB.open('toss-a-coin', 1);
 // Database version manipulator
 request.onupgradeneeded = function(event) {
     const db = event.target.result;
-    db.createObjectStore('new_budget', { autoIncrement: true });
+    db.createObjectStore('new_transaction', { autoIncrement: true });
 };
 
 // Stores object once the connection to the database is finalized. 
@@ -25,28 +25,29 @@ request.onerror = function(event) {
     console.log(event.target.errorCode);
 };
 
-// Offline budget submission
+// Offline transaction submission
 function memoryLog(memory) {
+    console.log(memory);
     // Temporary connection to database
-    const transaction = db.transaction(['new_budget'], 'readwrite');
+    const transaction = db.transaction(['new_transaction'], 'readwrite');
     // Object store access
-    const budgetObjectStore = transaction.objectstore('new_budget');
+    const transactionObjectStore = transaction.objectStore('new_transaction');
 
-    budgetObjectStore.add(memory);
+    transactionObjectStore.add(memory);
 };
 
 function memoryConnect() {
-    const transaction = db.transaction(['new_budget'], 'readwrite');
-    const budgetObjectStore = transaction.objectstore('new_budget');
+    const transaction = db.transaction(['new_transaction'], 'readwrite');
+    const transactionObjectStore = transaction.objectStore('new_transaction');
 
     // Variable set to get all records from store.
-    const rememberAll = budgetObjectStore.getAll();
+    const rememberAll = transactionObjectStore.getAll();
 
     rememberAll.onsuccess = function() {
-        if(getAll.result.length > 0) {
-            fetch('/api/budget', {
+        if(rememberAll.result.length > 0) {
+            fetch('/api/transaction', {
                 method: 'POST',
-                body: JSON.stringify(getAll.result),
+                body: JSON.stringify(rememberAll.result),
                 headers: {
                     Accept: 'application/json, text/plain, */*',
                     'Content-Type': 'application/json'
@@ -57,13 +58,13 @@ function memoryConnect() {
                 if (serverResponse.message) {
                     throw new Error(serverResponse);
                 }
-                const transaction = db.transaction(['new_budget'], 'readwrite');
-                const budgetObjectStore = transaction.objectStore('new_budget');
+                const transaction = db.transaction(['new_transaction'], 'readwrite');
+                const transactionObjectStore = transaction.objectStore('new_transaction');
 
                 // Clears all objects in store.
-                budgetObjectStore.clear();
+                transactionObjectStore.clear();
 
-                alert('All saved budgets has been submitted!');
+                alert('All saved transactions have been submitted!');
             })
             .catch(err => {
                 console.log(err);
@@ -73,4 +74,4 @@ function memoryConnect() {
 };
 
 // Connection listener
-window.addEventListener('online', memoryConnect)
+window.addEventListener('online', memoryConnect);
